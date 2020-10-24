@@ -1,135 +1,137 @@
 ; Identifier conventions
 
 ; Assume all-caps names are constants
-((identifier) @constant
- (#match? @constant "^[A-Z][A-Z\\d_]+$'"))
+((identifier) @entity.name.constant.rust
+ (#match? @entity.name.constant.rust "^[A-Z][A-Z\\d_]+$'"))
 
 ; Assume that uppercase names in paths are types
 ((scoped_identifier
-  path: (identifier) @type)
- (#match? @type "^[A-Z]"))
+  path: (identifier) @entity.name.type.rust)
+ (#match? @entity.name.type.rust "^[A-Z]"))
 ((scoped_identifier
   path: (scoped_identifier
-    name: (identifier) @type))
- (#match? @type "^[A-Z]"))
+    name: (identifier) @entity.name.type.rust))
+ (#match? @entity.name.type.rust "^[A-Z]"))
 
 ; Assume other uppercase names are enum constructors
-((identifier) @constructor
- (#match? @constructor "^[A-Z]"))
+((identifier) @variable.function.constructor.rust
+ (#match? @variable.function.constructor.rust "^[A-Z]"))
 
 ; Function calls
 
 (call_expression
-  function: (identifier) @function)
+  function: (identifier) @variable.function.rust)
 (call_expression
   function: (field_expression
-    field: (field_identifier) @function.method))
+    field: (field_identifier) @variable.function.method.rust))
 (call_expression
   function: (scoped_identifier
     "::"
-    name: (identifier) @function))
+    name: (identifier) @variable.function.rust))
 
 (generic_function
-  function: (identifier) @function)
+  function: (identifier) @entity.name.function.rust)
 (generic_function
   function: (scoped_identifier
-    name: (identifier) @function))
+    name: (identifier) @entity.name.function.rust))
 (generic_function
   function: (field_expression
-    field: (field_identifier) @function.method))
+    field: (field_identifier) @entity.name.function.method.rust))
 
 (macro_invocation
-  macro: (identifier) @function.macro
-  "!" @function.macro)
+  macro: (identifier) @variable.function.macro.rust
+  "!" @variable.function.macro.rust)
 
 ; Function definitions
 
-(function_item (identifier) @function)
-(function_signature_item (identifier) @function)
+(function_item (identifier) @entity.name.function.rust)
+(function_signature_item (identifier) @entity.name.function.rust)
 
 ; Other identifiers
 
-(type_identifier) @type
-(primitive_type) @type.builtin
-(field_identifier) @property
+(type_identifier) @storage.type.rust
+(primitive_type) @storage.type.language.rust
+(field_identifier) @variable.other.member.rust
 
-(line_comment) @comment
-(block_comment) @comment
+(line_comment) @comment.line.rust
+(block_comment) @comment.block.rust
 
-"(" @punctuation.bracket
-")" @punctuation.bracket
-"[" @punctuation.bracket
-"]" @punctuation.bracket
+"(" @punctuation.section.parens.begin
+")" @punctuation.section.parens.end
+"[" @punctuation.section.brackets.begin
+"]" @punctuation.section.brackets.end
 
 (type_arguments
-  "<" @punctuation.bracket
-  ">" @punctuation.bracket)
+  "<" @punctuation.definition.generic.begin
+  ">" @punctuation.definition.generic.end)
 (type_parameters
-  "<" @punctuation.bracket
-  ">" @punctuation.bracket)
+  "<" @punctuation.definition.generic.begin
+  ">" @punctuation.definition.generic.end)
 
-"::" @punctuation.delimiter
-"." @punctuation.delimiter
-";" @punctuation.delimiter
+"::" @punctuation.separator
+"." @punctuation.separator
+";" @punctuation.terminator
 
 (parameter (identifier) @variable.parameter)
 
-(lifetime (identifier) @label)
+(lifetime (identifier) @entity.name.label)
 
-"break" @keyword
-"const" @keyword
-"continue" @keyword
-"default" @keyword
-"dyn" @keyword
-"else" @keyword
-"enum" @keyword
-"extern" @keyword
-"fn" @keyword
-"for" @keyword
-"if" @keyword
-"impl" @keyword
-"in" @keyword
-"let" @keyword
-"let" @keyword
-"loop" @keyword
+"async" @keyword.other
+"await" @keyword.other
+"break" @keyword.control
+"const" @keyword.other
+"continue" @keyword.control
+"default" @keyword.other
+"dyn" @keyword.other
+"else" @keyword.control
+"enum" @keyword.other
+"extern" @keyword.other
+"fn" @keyword.declaration
+"for" @keyword.control
+"if" @keyword.conditional
+"impl" @keyword.other
+"in" @keyword.control
+"let" @keyword.declaration
+"let" @keyword.declaration
+"loop" @keyword.control
 "macro_rules!" @keyword
-"match" @keyword
-"mod" @keyword
-"move" @keyword
-"pub" @keyword
-"ref" @keyword
-"return" @keyword
-"static" @keyword
-"struct" @keyword
-"trait" @keyword
-"type" @keyword
-"union" @keyword
-"unsafe" @keyword
-"use" @keyword
-"where" @keyword
-"while" @keyword
-(mutable_specifier) @keyword
-(use_list (self) @keyword)
-(scoped_use_list (self) @keyword)
-(scoped_identifier (self) @keyword)
-(super) @keyword
+"match" @keyword.conditional
+"mod" @keyword.declaration
+"move" @keyword.other
+"pub" @keyword.other
+"ref" @keyword.other
+"return" @keyword.other
+"static" @keyword.other
+"struct" @keyword.other
+"trait" @keyword.other
+"type" @keyword.declaration
+"union" @keyword.declaration
+"unsafe" @keyword.other
+"use" @keyword.import
+"where" @keyword.control
+"while" @keyword.control
+(mutable_specifier) @keyword.other
+(use_list (self) @keyword.import)
+(scoped_use_list (self) @keyword.import)
+(scoped_identifier (self) @keyword.other)
+(super) @keyword.other
 
-(self) @variable.builtin
+(self) @variable.language
 
 (char_literal) @string
 (string_literal) @string
 (raw_string_literal) @string
 
-(boolean_literal) @constant.builtin
-(integer_literal) @constant.builtin
-(float_literal) @constant.builtin
+(boolean_literal) @constant.language
+(integer_literal) @constant.language
+(float_literal) @constant.language
 
-(escape_sequence) @escape
+(escape_sequence) @constant.character.escape
 
 (attribute_item) @attribute
 (inner_attribute_item) @attribute
 
-"as" @operator
-"*" @operator
-"&" @operator
-"'" @operator
+"as" @keyword.operator
+"*" @keyword.operator
+"&" @keyword.operator
+"'" @keyword.operator
